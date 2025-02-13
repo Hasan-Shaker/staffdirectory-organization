@@ -77,17 +77,27 @@ $tempColumns = [
         'exclude' => false,
         'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.image',
         'l10n_mode' => 'exclude',
-        'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-            'tx_staffdirectoryorganization_images',
-            [
-                'maxitems' => 5,
-                'minitems' => 0
-            ],
-            $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-        )
     ],
 ];
-
+$typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getMajorVersion();
+if ($typo3Version < 12) {
+    $tempColumns['tx_staffdirectoryorganization_images']['config'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+        'tx_staffdirectoryorganization_images',
+        [
+            'maxitems' => 5,
+            'minitems' => 0
+        ],
+        $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
+    );
+} else {
+    $tempColumns['tx_staffdirectoryorganization_images']['config'] =
+        [
+            'type' => 'file',
+            'allowed' => $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
+            'maxitems' => 5,
+            'minitems' => 0
+        ];
+}
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
     'tx_staffdirectory_domain_model_organization',
     $tempColumns
