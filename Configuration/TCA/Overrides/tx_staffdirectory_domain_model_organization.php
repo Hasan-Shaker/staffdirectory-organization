@@ -80,7 +80,15 @@ $tempColumns = [
     ],
 ];
 $typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class)->getMajorVersion();
-if ($typo3Version < 12) {
+if ($typo3Version >= 12) {
+    $tempColumns['tx_staffdirectoryorganization_images']['config'] =
+        [
+            'type' => 'file',
+            'maxitems' => 5,
+            'minitems' => 0,
+            'allowed' => $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
+        ];
+} else {
     $tempColumns['tx_staffdirectoryorganization_images']['config'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
         'tx_staffdirectoryorganization_images',
         [
@@ -89,14 +97,6 @@ if ($typo3Version < 12) {
         ],
         $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
     );
-} else {
-    $tempColumns['tx_staffdirectoryorganization_images']['config'] =
-        [
-            'type' => 'file',
-            'allowed' => $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'],
-            'maxitems' => 5,
-            'minitems' => 0
-        ];
 }
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
     'tx_staffdirectory_domain_model_organization',
